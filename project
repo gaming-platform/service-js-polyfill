@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+help() {
+    echo
+    echo ------------------
+    echo Available commands
+    echo ------------------
+    echo build
+    echo Build the environment for development.
+    echo
+    echo up
+    echo Shorthand to start an already built project.
+    echo
+    echo down
+    echo Shorthand to down a started project.
+    echo
+    echo acceptance
+    echo Run acceptance tests.
+    echo
+    echo buildProductionImages
+    echo Build the production images.
+    echo
+    echo pushProductionImages
+    echo Push the production images to DockerHub.
+    echo
+}
+
+build() {
+    docker-compose down --volumes
+    docker-compose build --pull
+    docker-compose up
+}
+
+up() {
+    docker-compose up
+}
+
+down() {
+    docker-compose down
+}
+
+acceptance() {
+    buildProductionImages
+
+    docker-compose -f docker-compose.ci.yml -p service-js-polyfill-ci build --pull
+    docker-compose -f docker-compose.ci.yml -p service-js-polyfill-ci up -d
+    docker-compose -f docker-compose.ci.yml -p service-js-polyfill-ci run node bin/waitForIt application:80 --timeout=120 -- bin/waitForIt selenium:4444 --timeout=120 -- node_modules/codeceptjs/bin/codecept.js run --steps
+    docker-compose -f docker-compose.ci.yml -p service-js-polyfill-ci down -v
+}
+
+buildProductionImages() {
+    docker build --file docker/production/Dockerfile --tag gamingplatform/service-js-polyfill .
+}
+
+pushProductionImages() {
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+    docker push gamingplatform/service-js-polyfill
+}
+
+if [ "$*" = "" ]
+then
+    help
+else
+    $*
+fi

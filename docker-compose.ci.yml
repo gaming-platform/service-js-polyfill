@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+    application:
+        image: gamingplatform/service-js-polyfill
+    selenium:
+        image: selenium/standalone-chrome
+    node:
+        build:
+            context: .
+            dockerfile: ./docker/development/Dockerfile
+        volumes:
+            - ./tests:/project/tests

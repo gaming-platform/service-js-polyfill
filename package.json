@@ -1,0 +1,23 @@
+{
+  "name": "service-js-polyfill",
+  "license": "MIT",
+  "description": "This service provides JavaScript polyfill for the gaming platform.",
+  "author": "Markus Reinhold <markusreinhold@icloud.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaming-platform/service-js-polyfill.git"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "@webcomponents/custom-elements": "^1.2.1",
+    "event-source-polyfill": "^1.0.5",
+    "express": "^4.16.4",
+    "file-system": "^2.2.2"
+  },
+  "devDependencies": {
+    "codeceptjs": "^2.0.3",
+    "webdriverio": "^5.3.5"
+  }
+}

@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+    application:
+        build:
+            context: .
+            dockerfile: ./docker/development/Dockerfile
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/project
