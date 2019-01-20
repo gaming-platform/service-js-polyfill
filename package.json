@@ -1,7 +1,7 @@
 {
   "name": "service-js-polyfill",
   "license": "MIT",
-  "description": "This service provides JavaScript polyfill for the gaming platform.",
+  "description": "This service provides JavaScript polyfills for the gaming platform.",
   "author": "Markus Reinhold <markusreinhold@icloud.com>",
   "repository": {
     "type": "git",
