@@ -2,9 +2,6 @@ FROM node:11.7-alpine
 
 WORKDIR /project
 
-RUN apk add --no-cache \
-    bash
-
 COPY /package.json /package-lock.json /project/
 
 RUN cd /project && npm install --verbose --only=production
