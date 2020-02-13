@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: master
+  pull_request:
+
+jobs:
+  pipeline:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare
+        run: ./project buildProductionImages
+
+      - name: Testsuite
+        run: |
+          docker-compose -f docker-compose.ci.yml up -d
+          docker-compose -f docker-compose.ci.yml run node bin/waitForIt application:80 --timeout=120 -- bin/waitForIt selenium:4444 --timeout=120 -- node_modules/codeceptjs/bin/codecept.js run --steps
+          docker-compose -f docker-compose.ci.yml down -v
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/master'
+        run: ./project pushProductionImages
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
